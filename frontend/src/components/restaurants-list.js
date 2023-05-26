@@ -75,7 +75,7 @@ const ListRestaurants = (props) => {
   };
 
   const findByCuisine = () => {
-    if (searchCuisine === "All Cuisines") {
+    if (searchCuisine == "All Cuisines") {
       refreshList();
     } else {
       find(searchCuisine, "cuisine");
@@ -84,71 +84,93 @@ const ListRestaurants = (props) => {
 
   return (
     <div>
-      <div className="row pb-1">
-        <div className="input-group col-lg-4">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search by name"
-            value={searchName}
-            onChange={onChangeSearchName}
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByName}
-            >
-              Search
-            </button>
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-4 mb-3">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by name"
+                value={searchName}
+                onChange={onChangeSearchName}
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByName}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="input-group col-lg-4">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search by zip"
-            value={searchZip}
-            onChange={onChangeSearchZip}
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByZip}
-            >
-              Search
-            </button>
+          <div className="col-lg-4 mb-3">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by zip"
+                value={searchZip}
+                onChange={onChangeSearchZip}
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByZip}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="input-group col-lg-4">
-          <select onChange={onChangeSearchCuisine}>
-            {cuisines.map((cuisine) => {
-              return (
-                <option key={cuisine} value={cuisine}>
-                  {cuisine.substr(0, 20)}
-                </option>
-              );
-            })}
-          </select>
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByCuisine}
-            >
-              Search
-            </button>
+          <div className="col-lg-4 mb-3">
+            <div className="input-group">
+              <select
+                className="custom-select"
+                onChange={onChangeSearchCuisine}
+              >
+                {cuisines.map((cuisine, index) => (
+                  <option key={index} value={cuisine}>
+                    {cuisine.substr(0, 20)}
+                  </option>
+                ))}
+              </select>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={findByCuisine}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <div className="row">
-        {restaurants.map((restaurant) => {
+        {restaurants.map((restaurant, index) => {
           const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
           return (
             <div className="col-lg-4 pb-1">
               <div className="card">
                 <div className="card-body">
+                  <div
+                    id="map-container-google-1"
+                    className="z-depth-1-half map-container"
+                    style={{ height: 230}}
+                  >
+                    <iframe
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                      frameBorder="0"
+                      style={{ border: 0, height: "200px", width: "100%" }}
+                      allowFullScreen
+                    ></iframe>
+                  </div>
                   <h5 className="card-title">{restaurant.name}</h5>
                   <p className="card-text">
                     <strong>Cuisine: </strong>
@@ -157,9 +179,9 @@ const ListRestaurants = (props) => {
                     <strong>Address: </strong>
                     {address}
                   </p>
-                  <div className="row">
+                  <div className="row" key={index} value={restaurant}>
                     <Link
-                      to={"/restaurants/" + restaurant._id}
+                      to={"/restaurants/id/" + restaurant._id}
                       className="btn btn-primary col-lg-5 mx-1 mb-1"
                     >
                       View Reviews

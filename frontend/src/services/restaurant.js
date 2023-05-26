@@ -6,7 +6,7 @@ class RestaurantDataService {
   }
 
   get(id) {
-    return http.get(`/restaurant?id=${id}`);
+    return http.get(`/restaurants/id/${id}`);
   }
 
   find(query, by = "name", page = 0) {
@@ -26,7 +26,7 @@ class RestaurantDataService {
   }
 
   getCuisines(id) {
-    return http.get(`/cuisines`);
+    return http.get(`restaurants/cuisines`);
   }
 
 }

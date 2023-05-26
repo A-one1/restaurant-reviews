@@ -65,8 +65,8 @@ function App() {
             render={(props) => <AddReview {...props} user={user} />}
           />
           <Route
-            path="/restaurants/:id"
-            render={(props) => <Restaurant {...props} user={user} />}
+            path="/restaurants/id/:id"
+            element={<Restaurant user={user} />}
           />
           <Route
             path="/login"
