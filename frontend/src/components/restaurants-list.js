@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RestaurantDataService from "../services/restaurant";
-import { Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ListRestaurants = (props) => {
   const [restaurants, setRestaurants] = useState([]);
@@ -75,7 +75,7 @@ const ListRestaurants = (props) => {
   };
 
   const findByCuisine = () => {
-    if (searchCuisine == "All Cuisines") {
+    if (searchCuisine === "All Cuisines") {
       refreshList();
     } else {
       find(searchCuisine, "cuisine");
@@ -165,6 +165,7 @@ const ListRestaurants = (props) => {
                     style={{ height: 230}}
                   >
                     <iframe
+                    title={restaurant.name}
                       src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                       frameBorder="0"
                       style={{ border: 0, height: "200px", width: "100%" }}
@@ -187,7 +188,7 @@ const ListRestaurants = (props) => {
                       View Reviews
                     </Link>
                     <a
-                      target="_blank"
+                      target=""
                       href={"https://www.google.com/maps/place/" + address}
                       className="btn btn-primary col-lg-5 mx-1 mb-1"
                     >

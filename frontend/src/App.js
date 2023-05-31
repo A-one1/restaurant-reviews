@@ -6,6 +6,7 @@ import AddReview from "./components/add-review";
 import ListRestaurants from "./components/restaurants-list";
 import Login from "./components/login";
 import Restaurant from "./components/restaurants";
+import { Button } from "bootstrap";
 
 function App() {
   const [user,setUser] = React.useState(null);
@@ -17,6 +18,8 @@ function App() {
   async function logout(){
     setUser(null)
   }
+  console.log("Here is the user",user)
+
 
   return (
     <div>
@@ -32,13 +35,13 @@ function App() {
           </li>
           <li className="nav-item">
             {user ? (
-              <a
+              <Button
                 onClick={logout}
                 className="nav-link"
                 style={{ cursor: "pointer" }}
               >
                 Logout {user.name}
-              </a>
+              </Button>
             ) : (
               <Link to="/login" className="nav-link">
                 Login
@@ -57,21 +60,20 @@ function App() {
           />
           <Route
             exact
-            path=  "/restaurants"
+            path=  '/restaurants'
             element={<ListRestaurants/>}
           />
           <Route
-            path="/restaurants/:id/review"
-            render={(props) => <AddReview {...props} user={user} />}
+            path='/restaurants/:id/review'
+            element={<AddReview  user={user} />}
           />
           <Route
-            path="/restaurants/id/:id"
-            element={<Restaurant user={user} />}
+            path='/restaurants/id/:id'
+            element={<Restaurant user={user}/>}
           />
           <Route
-            path="/login"
-            element = {<Login/>}
-            render={(props) => <Login {...props} login={login} />}
+            path='/login'
+            element = {<Login login={login}/>}
           />
         </Routes>
       </div>

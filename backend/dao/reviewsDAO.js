@@ -1,75 +1,72 @@
-import mongodb from "mongodb"
+import mongodb from "mongodb";
 
-const ObjectId = mongodb.ObjectId
-let reviews
+const ObjectId = mongodb.ObjectId;
+let reviews;
 
-export default class ReviewsDAO{
-    static async injectDB(conn){
-        if(reviews){
-            return
-        }
-        try{
-            reviews = await conn.db(process.env.RESTREVIEWS_NS).collection("reviews")
-        } catch(e){
-            console.error(`Unable to establish collection handles in userDAO:${e}`)
-        }
+export default class ReviewsDAO {
+  static async injectDB(conn) {
+    if (reviews) {
+      return;
     }
-
-    static async getReviews(){
-        try{
-            const cursor = await reviews.find();
-            const allReviews = await cursor.toArray();
-
-            return {allReviews}
-
-        }
-        catch(e){
-            console.error(`Unable to get review: ${e}`)
-            return {error: e};
-        }
-
-
+    try {
+      reviews = await conn.db(process.env.RESTREVIEWS_NS).collection("reviews");
+    } catch (e) {
+      console.error(`Unable to establish collection handles in userDAO:${e}`);
     }
+  }
 
-    static async addReview(restaurantId,user,review,date){
-        try{
-            const reviewDoc = { name: user.name,
-            user_id: user._id,
-            date: date,
-            text: review,
-            restaurant_id: new ObjectId(restaurantId), }
+  static async getReviews() {
+    try {
+      const cursor = await reviews.find();
+      const allReviews = await cursor.toArray();
 
-            return await reviews.insertOne(reviewDoc)
-        }catch(e){
-            console.error(`unable to post review: ${e}`)
-            return {error: e}
-        }
+      return { allReviews };
+    } catch (e) {
+      console.error(`Unable to get review: ${e}`);
+      return { error: e };
     }
+  }
 
-    static async updateReview(reviewId,userId,text,date){
-        try{
-            const updateResponse= await reviews.updateOne(
-                { user_id: userId, _id: new ObjectId(reviewId)},
-                {$set:{text: text, date : date}},
-            )
-            return updateResponse
+  static async addReview(restaurantId, user, review, date) {
+    try {
+      const reviewDoc = {
+        name: user.name,
+        user_id: user._id,
+        date: date,
+        text: review,
+        restaurant_id: new ObjectId(restaurantId),
+      };
 
-        }catch(e){
-            console.error(`unable to update review: ${e}`)
-            return {error:e}
-        }
+      return await reviews.insertOne(reviewDoc);
+    } catch (e) {
+      console.error(`unable to post review: ${e}`);
+      return { error: e };
     }
+  }
 
-    static async deleteReview(reviewId,userId){
-        try{
-            const deleteResponse = await reviews.deleteOne({
-                _id: new ObjectId(reviewId),
-                user_id: userId,
-            })
-            return deleteResponse
-        }catch(e){
-            console.error(`Unable to delete review: ${e}`)
-            return {error: e}
-        }
+  static async updateReview(reviewId, userId, text, date) {
+    try {
+      const updateResponse = await reviews.updateOne(
+        { user_id: userId, _id: new ObjectId(reviewId) },
+        { $set: { text: text, date: date } }
+      );
+      return updateResponse;
+    } catch (e) {
+      console.error(`unable to update review: ${e}`);
+      return { error: e };
     }
+  }
+
+  static async deleteReview(reviewId, userId) {
+    try {
+      const deleteResponse = await reviews.deleteOne({
+        _id: new ObjectId(reviewId),
+        user_id: parseInt(userId),
+      });
+      return deleteResponse;
+    } catch (e) {
+      console.error(`Unable to delete review: ${e}`);
+      return { error: e };
+    }
+  }
 }
