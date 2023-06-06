@@ -8,19 +8,19 @@ import Login from "./components/login";
 import Restaurant from "./components/restaurants";
 
 function App() {
-  const [user,setUser] = React.useState(JSON.parse(localStorage.getItem('user')));
+  const [user, setUser] = React.useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
-  async function login(user = null){
+  async function login(user = null) {
     setUser(user);
-    localStorage.setItem('user',JSON.stringify(user))
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
-  async function logout(){
-    setUser(null)
-    localStorage.removeItem('user')
+  async function logout() {
+    setUser(null);
+    localStorage.removeItem("user");
   }
-//  console.log("Here is the user",user)
-
 
   return (
     <div>
@@ -54,28 +54,17 @@ function App() {
 
       <div className="container mt-3">
         <Routes>
+          <Route exact path="/" element={<ListRestaurants />} />
+          <Route exact path="/restaurants" element={<ListRestaurants />} />
           <Route
-            exact
-            path= "/"  
-            element={<ListRestaurants/>}
+            path="/restaurants/:id/review"
+            element={<AddReview user={user} />}
           />
           <Route
-            exact
-            path=  '/restaurants'
-            element={<ListRestaurants/>}
+            path="/restaurants/id/:id"
+            element={<Restaurant user={user} />}
           />
-          <Route
-            path='/restaurants/:id/review'
-            element={<AddReview  user={user} />}
-          />
-          <Route
-            path='/restaurants/id/:id'
-            element={<Restaurant user={user}/>}
-          />
-          <Route
-            path='/login'
-            element = {<Login login={login}/>}
-          />
+          <Route path="/login" element={<Login login={login} />} />
         </Routes>
       </div>
     </div>

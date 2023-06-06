@@ -3,38 +3,35 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import RestaurantDataService from "../services/restaurantDataService";
 
 const AddReview = (props) => {
-
   //let initialReviewState = "";
   let editing = false;
 
   const { id } = useParams();
   const location = useLocation();
 
-  const currentReview = location.state
+  const currentReview = location.state;
 
-  console.log("Props",props);
+  console.log("Props", props);
 
- console.log("state",currentReview)
+  console.log("state", currentReview);
 
-
-//  // if (props.location.state && props.location.state.currentReview) {
-//     editing = true;
-//     let initialReviewState = props.location.state.currentReview.text;
-//   }
+  //  // if (props.location.state && props.location.state.currentReview) {
+  //     editing = true;
+  //     let initialReviewState = props.location.state.currentReview.text;
+  //   }
 
   const [review, setReview] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [data,setData] = useState({ 
-    text: review,
-    name: "",
-    user_id: "",
-    restaurant_id:id,
-    review_id: editing ? props.location.state.currentReview.user_id : null
-
-  })
+  // const [data, setData] = useState({
+  //   text: review,
+  //   name: "",
+  //   user_id: "",
+  //   restaurant_id: id,
+  //   review_id: editing ? props.location.state.currentReview.user_id : null,
+  // });
 
   const handleInputChange = (event) => {
-    setReview(event.target.value)
+    setReview(event.target.value);
   };
 
   const saveReview = () => {
@@ -42,7 +39,7 @@ const AddReview = (props) => {
       text: review,
       name: props.user.name,
       user_id: props.user.id,
-      restaurant_id: id
+      restaurant_id: id,
     };
 
     if (editing) {
@@ -74,10 +71,7 @@ const AddReview = (props) => {
           {submitted ? (
             <div>
               <h4> You submitted successfully</h4>
-              <Link
-                to={"/restaurants/id/" + id}
-                className="btn btn-success"
-              >
+              <Link to={"/restaurants/id/" + id} className="btn btn-success">
                 Back to Reviews
               </Link>
             </div>

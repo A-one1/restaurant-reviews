@@ -6,7 +6,8 @@ class RestaurantDataService {
   }
 
   get(id) {
-    return http.get(`/restaurants/id/${id}`);
+    //return http.get(`/restaurants/id/${id}`);//path parameter
+    return http.get(`/restaurant?id=${id}`);//query parameter for realm
   }
 
   find(query, by = "name", page = 0) {
@@ -14,19 +15,23 @@ class RestaurantDataService {
   } 
 
   createReview(data) {
-    return http.post(`/restaurants/review`, data);
+    //return http.post(`/restaurants/review`, data); node
+
+    return http.post(`/review_new`, data); //realm
   }
 
   updateReview(data) {
-    return http.put("/review-edit", data);
+    return http.put("/review_edit", data);
   }
 
   deleteReview(id, userId) {
-    return http.delete(`/restaurants/review?id=${id}`, {data:{user_id: userId}});
+   // return http.delete(`/restaurants/review?id=${id}`, {data:{user_id: userId}}); //node
+
+    return http.delete(`/review_delete?id=${id}`, {data:{user_id: userId}});//realm
   }
 
   getCuisines(id) {
-    return http.get(`restaurants/cuisines`);
+    return http.get(`/cuisines`);
   }
 
 }
