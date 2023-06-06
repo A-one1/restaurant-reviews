@@ -14,7 +14,7 @@ class RestaurantDataService {
   } 
 
   createReview(data) {
-    return http.post("/review-new", data);
+    return http.post(`/restaurants/review`, data);
   }
 
   updateReview(data) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import RestaurantDataService from "../services/restaurant";
+import RestaurantDataService from "../services/restaurantDataService";
 import { Link } from "react-router-dom";
 
 const ListRestaurants = (props) => {

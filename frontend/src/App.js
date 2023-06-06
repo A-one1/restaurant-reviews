@@ -6,19 +6,20 @@ import AddReview from "./components/add-review";
 import ListRestaurants from "./components/restaurants-list";
 import Login from "./components/login";
 import Restaurant from "./components/restaurants";
-import { Button } from "bootstrap";
 
 function App() {
-  const [user,setUser] = React.useState(null);
+  const [user,setUser] = React.useState(JSON.parse(localStorage.getItem('user')));
 
   async function login(user = null){
     setUser(user);
+    localStorage.setItem('user',JSON.stringify(user))
   }
 
   async function logout(){
     setUser(null)
+    localStorage.removeItem('user')
   }
-  console.log("Here is the user",user)
+//  console.log("Here is the user",user)
 
 
   return (
@@ -35,13 +36,13 @@ function App() {
           </li>
           <li className="nav-item">
             {user ? (
-              <Button
+              <button
                 onClick={logout}
                 className="nav-link"
                 style={{ cursor: "pointer" }}
               >
                 Logout {user.name}
-              </Button>
+              </button>
             ) : (
               <Link to="/login" className="nav-link">
                 Login

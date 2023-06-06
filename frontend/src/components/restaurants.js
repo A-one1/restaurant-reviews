@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Switch, Route, Link, useParams } from "react-router-dom";
-import RestaurantDataService from "../services/restaurant";
+import { Link, useParams } from "react-router-dom";
+import RestaurantDataService from "../services/restaurantDataService";
 
 const Restaurant = (props) => {
   const initialRestaurantState = {
@@ -19,6 +19,7 @@ const Restaurant = (props) => {
     RestaurantDataService.get(id)
       .then((response) => {
         setRestaurant(response.data);
+
       })
       .catch((e) => {
         console.log(e);
@@ -26,9 +27,9 @@ const Restaurant = (props) => {
   };
   useEffect(() => {
     getRestaurant(id);
-  }, [id]);
+  }, []);
 
-  const deleteReview = (reviewId, index) => {
+  function deleteReview(reviewId, index) {
     RestaurantDataService.deleteReview(reviewId, props.user.id)
       .then((response) => {
         setRestaurant((prevState) => {
@@ -37,11 +38,24 @@ const Restaurant = (props) => {
             ...prevState,
           };
         });
+        getRestaurant(id)
       })
       .catch((e) => {
         console.log(e);
       });
-  };
+  }
+
+  const formatDate = (dateString)=>{
+    const date = new Date(dateString)
+    return date.toLocaleString('en-US',{
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    })
+  }
 
   return (
     <div>
@@ -58,7 +72,11 @@ const Restaurant = (props) => {
             <br />
           </p>
           <Link
-            to={"/restaurants/" + id + "/review"}
+            to={{
+              pathname: "/restaurants/" + id + "/review",
+              state: { currentReview: "add" },
+
+            }}
             className="btn btn-primary"
           >
             Add Review
@@ -77,21 +95,21 @@ const Restaurant = (props) => {
                           <strong>User: </strong>
                           {review.name}
                           <br />
-                          <strong>Date:</strong>
-                          {review.date}
+                          <strong>Date: </strong>
+                          {formatDate(review.date)}
                           <br />
                         </p>
 
                         {props.user && props.user.id == review.user_id && (
                           <div className="row">
-                            <a
+                            <button
                               onClick={() =>
                                 deleteReview(review._id, props.user.id)
                               }
                               className="btn btn-primary col-lg-5 mx-1 mb-1"
                             >
                               Delete
-                            </a>
+                            </button>
                             <Link
                               to={{
                                 pathname: "/restaurants/" + id + "/review",
