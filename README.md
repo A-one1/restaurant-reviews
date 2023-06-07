@@ -2,4 +2,5 @@
 
 "Building a Full Stack Restaurant Review Website with MERN and MongoDB Realm Integration
 
-https://restaurant-advisor.vercel.app/
+https://restaurant-reviews-five.vercel.app/
+
