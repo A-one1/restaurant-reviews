@@ -22,6 +22,11 @@ const Login = (props) => {
   };
   return (
     <div className="form-group">
+      <div className="alert alert-success ">
+        <center>
+        <strong>This site is in test phase. You don't need to register an account. Just type in your name and an ID.</strong> 
+        </center>
+      </div>
       <div
         className="container justify-content-center vh-10"
         style={{ width: "400px" }}
@@ -32,7 +37,7 @@ const Login = (props) => {
             <form>
               <div className="mb-3">
                 <label htmlFor="loginName" className="form-label">
-                  Email or username
+                  Username
                 </label>
                 <input
                   type="email"
@@ -58,7 +63,7 @@ const Login = (props) => {
                 />
               </div>
 
-              <div className="d-grid">
+              <div>
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -72,7 +77,6 @@ const Login = (props) => {
         </div>
       </div>
     </div>
-   
   );
 };
 
