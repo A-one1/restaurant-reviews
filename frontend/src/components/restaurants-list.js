@@ -9,6 +9,11 @@ const ListRestaurants = (props) => {
   const [searchZip, setSearchZip] = useState("");
   const [searchCuisine, setSearchCuisine] = useState("");
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     retrieveRestaurants();
@@ -157,47 +162,110 @@ const ListRestaurants = (props) => {
           const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
           return (
             <div className="col-lg-4 pb-1">
-              <div className="card">
-                <div className="card-body">
+              <section class="mx-auto my-3" style={{ "max-width": "25rem" }}>
+                <div class="card">
                   <div
-                    id="map-container-google-1"
-                    className="z-depth-1-half map-container"
-                    style={{ height: 230}}
+                    className="bg-image hover-overlay ripple  "
+                    data-mdb-ripple-color="light"
                   >
+                    {isLoading && (
+                      <div className="spinner-border" role="status"></div>
+                    )}
                     <iframe
-                    title={restaurant.name}
-                      src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                      title={restaurant.name}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                        address
+                      )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                       frameBorder="0"
                       style={{ border: 0, height: "200px", width: "100%" }}
                       allowFullScreen
+                      onLoad={handleIframeLoad}
                     ></iframe>
                   </div>
-                  <h5 className="card-title">{restaurant.name}</h5>
-                  <p className="card-text">
-                    <strong>Cuisine: </strong>
-                    {restaurant.cuisine}
-                    <br />
-                    <strong>Address: </strong>
-                    {address}
-                  </p>
-                  <div className="row" key={index} value={restaurant}>
-                    <Link
-                      to={"/restaurants/id/" + restaurant._id}
-                      className="btn btn-primary col-lg-5 mx-1 mb-1"
+                  <div class="card-body">
+                    <h5 class="card-title font-weight-bold">
+                      <a>{restaurant.name}</a>
+                    </h5>
+
+                    <p class="mb-2">
+                      <strong>Address: </strong>
+                      {address}
+                    </p>
+                    <p class="mb-2">
+                      <strong>Cuisine: </strong> {restaurant.cuisine}
+                    </p>
+
+                    {/* <p class="card-text">
+                    don't need anything for now
+                    </p> */}
+                    <hr class="my-4" />
+
+                    <div
+                      className="d-flex justify-content-center"
+                      key={index}
+                      value={restaurant}
                     >
-                      View Reviews
-                    </Link>
-                    <a
-                      target=""
-                      href={"https://www.google.com/maps/place/" + address}
-                      className="btn btn-primary col-lg-5 mx-1 mb-1"
-                    >
-                      View Map
-                    </a>
+                      <Link
+                        to={"/restaurants/id/" + restaurant._id}
+                        className="btn btn-primary col-lg-5 mx-1 mb-1"
+                      >
+                        View Reviews
+                      </Link>
+                      <a
+                        target=""
+                        href={"https://www.google.com/maps/place/" + address}
+                        className="btn btn-primary col-lg-5 mx-1 mb-1"
+                      >
+                        View Map
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </section>
             </div>
+
+            // <div className="col-lg-4 pb-1">
+            //   <div className="card">
+            //     <div className="card-body">
+            //       <div
+            //         id="map-container-google-1"
+            //         className="z-depth-1-half map-container"
+            //         style={{ height: 230}}
+            //       >
+            //         <iframe
+            //         title={restaurant.name}
+            //           src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+            //           frameBorder="0"
+            //           style={{ border: 0, height: "200px", width: "100%" }}
+            //           allowFullScreen
+            //         ></iframe>
+            //       </div>
+            //       <h5 className="card-title">{restaurant.name}</h5>
+            //       <p className="card-text">
+            //         <strong>Cuisine: </strong>
+            //         {restaurant.cuisine}
+            //         <br />
+            //         <strong>Address: </strong>
+            //         {address}
+            //       </p>
+            //       <div className="row" key={index} value={restaurant}>
+            //         <Link
+            //           to={"/restaurants/id/" + restaurant._id}
+            //           className="btn btn-primary col-lg-5 mx-1 mb-1"
+            //         >
+            //           View Reviews
+            //         </Link>
+            //         <a
+            //           target=""
+            //           href={"https://www.google.com/maps/place/" + address}
+            //           className="btn btn-primary col-lg-5 mx-1 mb-1"
+            //         >
+            //           View Map
+            //         </a>
+            //       </div>
+            //     </div>
+            //   </div>
+            // </div>
           );
         })}
       </div>

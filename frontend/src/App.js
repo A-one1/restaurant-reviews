@@ -25,34 +25,53 @@ function App() {
   return (
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <Link to="/restaurants" className="navbar-brand">
-          Restaurant Reviews
+        <Link
+          to="/restaurants"
+          className="navbar-brand"
+          style={{
+            marginLeft: 40,
+            fontFamily: "Montserrat",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+            letterSpacing: "1px",
+          }}
+        >
+          <span style={{ fontWeight: "bold" }}>Restaurant</span> Advisor
         </Link>
-        <div className="navbar-nav mr-auto">
+        <ul className="navbar-nav">
           <li className="nav-item">
             <Link to="/restaurants" className="nav-link">
               Restaurants
             </Link>
           </li>
-          <li className="nav-item">
-            {user ? (
-              <button
-                onClick={logout}
-                className="nav-link"
-                style={{ cursor: "pointer" }}
-              >
-                Logout {user.name}
-              </button>
-            ) : (
-              <Link to="/login" className="nav-link">
-                Login
-              </Link>
-            )}
-          </li>
+        </ul>
+        <div
+          className="navbar-collapse justify-content-end "
+          style={{ marginRight: 40 }}
+        >
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              {user ? (
+                <button
+                  onClick={logout}
+                  className="btn btn-link nav-link "
+                  style={{ cursor: "pointer" }}
+                >
+                  Logout {user.name}
+                </button>
+              ) : (
+                <Link to="/login" className="nav-link ">
+                  Login
+                </Link>
+              )}
+            </li>
+          </ul>
+        
         </div>
+        
       </nav>
+      <br/>
 
-      <div className="container mt-3">
+      <div className="container mr-3">
         <Routes>
           <Route exact path="/" element={<ListRestaurants />} />
           <Route exact path="/restaurants" element={<ListRestaurants />} />
