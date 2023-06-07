@@ -1,3 +1,6 @@
 # restaurant-reviews
 
-USING MERN TO CREATE A FULL STACK FUNCTIONAL RESTAURANT REVIEW WEBSITE
+"Building a Full Stack Restaurant Review Website with MERN and MongoDB Realm Integration
+
+https://restaurant-reviews-five.vercel.app/
+
