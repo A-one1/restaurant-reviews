@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,7 @@ const Login = (props) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
+    setErrors({ ...errors, [name]: "" });
   };
 
   const validateForm = () => {
@@ -26,7 +27,7 @@ const Login = (props) => {
     }
 
     if (!user.id.trim()) {
-      errors.id = "ID is required";
+      errors.id = "Password is required";
       isValid = false;
     }
     setErrors(errors);
@@ -39,13 +40,15 @@ const Login = (props) => {
       navigate("/");
     }
   };
+
+
   return (
     <div className="form-group">
       <div className="alert alert-success ">
         <center>
           <strong>
             This site is in test phase. You don't need to register an account.
-            Just type in your name and any ID.
+            Just type in your name and an ID.
           </strong>
         </center>
       </div>
@@ -77,11 +80,11 @@ const Login = (props) => {
 
               <div className="mb-3">
                 <label htmlFor="loginPassword" className="form-label">
-                  ID
+                  Password
                 </label>
                 <input
-                  type="text"
-                  placeholder="Numbers only"
+                  type="password"
+                  placeholder="********"
                   className={`form-control ${errors.id ? "is-invalid" : ""}`}
                   id="loginPassword"
                   name="id"
