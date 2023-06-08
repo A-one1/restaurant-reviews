@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-  const initialUserState = {
+  const [user, setUser] = useState({
     name: "",
     id: "",
-  };
-  const [user, setUser] = useState(initialUserState);
+  });
+  const [errors, setErrors] = useState({});
+
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -16,15 +16,37 @@ const Login = (props) => {
     setUser({ ...user, [name]: value });
   };
 
+  const validateForm = () => {
+    let isValid = true;
+    let errors = {};
+
+    if (!user.name.trim()) {
+      errors.name = "Username is required";
+      isValid = false;
+    }
+
+    if (!user.id.trim()) {
+      errors.id = "ID is required";
+      isValid = false;
+    }
+    setErrors(errors);
+    return isValid;
+  };
+
   const login = () => {
-    props.login(user);
-    navigate("/");
+    if (validateForm()) {
+      props.login(user);
+      navigate("/");
+    }
   };
   return (
     <div className="form-group">
       <div className="alert alert-success ">
         <center>
-        <strong>This site is in test phase. You don't need to register an account. Just type in your name and an ID.</strong> 
+          <strong>
+            This site is in test phase. You don't need to register an account.
+            Just type in your name and any ID.
+          </strong>
         </center>
       </div>
       <div
@@ -40,13 +62,17 @@ const Login = (props) => {
                   Username
                 </label>
                 <input
-                  type="email"
-                  className="form-control"
+                  type="text"
+                  placeholder="Name"
+                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   id="loginName"
                   name="name"
                   value={user.name}
                   onChange={handleInputChange}
                 />
+                {errors.name && (
+                  <div className="invalid-feedback">{errors.name}</div>
+                )}
               </div>
 
               <div className="mb-3">
@@ -54,18 +80,22 @@ const Login = (props) => {
                   ID
                 </label>
                 <input
-                  type="password"
-                  className="form-control"
+                  type="text"
+                  placeholder="Numbers only"
+                  className={`form-control ${errors.id ? "is-invalid" : ""}`}
                   id="loginPassword"
                   name="id"
                   value={user.id}
                   onChange={handleInputChange}
                 />
+                {errors.id && (
+                  <div className="invalid-feedback">{errors.id}</div>
+                )}
               </div>
 
               <div>
                 <button
-                  type="submit"
+                  type="button"
                   className="btn btn-primary"
                   onClick={login}
                 >

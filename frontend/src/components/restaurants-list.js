@@ -162,8 +162,8 @@ const ListRestaurants = (props) => {
           const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
           return (
             <div className="col-lg-4 pb-1">
-              <section class="mx-auto my-3" style={{ "max-width": "25rem" }}>
-                <div class="card">
+              <section className="mx-auto my-3" style={{ "maxWidth": "25rem" }}>
+                <div className="card">
                   <div
                     className="bg-image hover-overlay ripple  "
                     data-mdb-ripple-color="light"
@@ -182,23 +182,23 @@ const ListRestaurants = (props) => {
                       onLoad={handleIframeLoad}
                     ></iframe>
                   </div>
-                  <div class="card-body">
-                    <h5 class="card-title font-weight-bold">
+                  <div className="card-body">
+                    <h5 className="card-title font-weight-bold">
                       <a>{restaurant.name}</a>
                     </h5>
 
-                    <p class="mb-2">
+                    <p className="mb-2">
                       <strong>Address: </strong>
                       {address}
                     </p>
-                    <p class="mb-2">
+                    <p className="mb-2">
                       <strong>Cuisine: </strong> {restaurant.cuisine}
                     </p>
 
                     {/* <p class="card-text">
                     don't need anything for now
                     </p> */}
-                    <hr class="my-4" />
+                    <hr className="my-4" />
 
                     <div
                       className="d-flex justify-content-center"
