@@ -1,56 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import RestaurantDataService from "../services/restaurantDataService";
 
 const AddReview = (props) => {
-  //let initialReviewState = "";
-  let editing = false;
-
   const { id } = useParams();
   const location = useLocation();
+  let initialReviewState = "";
+  let editing = false;
 
-  const currentReview = location.state;
+  if (location.state && location.state.currentReview) {
+    editing = true;
+    initialReviewState = location.state.currentReview.text;
+  }
 
-  console.log("Props", props);
-
-  console.log("state", currentReview);
-
-  //  // if (props.location.state && props.location.state.currentReview) {
-  //     editing = true;
-  //     let initialReviewState = props.location.state.currentReview.text;
-  //   }
-
-  const [review, setReview] = useState("");
+  const [review, setReview] = useState(initialReviewState);
   const [submitted, setSubmitted] = useState(false);
-  // const [data, setData] = useState({
-  //   text: review,
-  //   name: "",
-  //   user_id: "",
-  //   restaurant_id: id,
-  //   review_id: editing ? props.location.state.currentReview.user_id : null,
-  // });
 
   const handleInputChange = (event) => {
     setReview(event.target.value);
   };
+  
 
   const saveReview = () => {
     var data = {
+      review_id: "",
+      user_id: props.user.id || props.user.googleId,
       text: review,
-      name: props.user.name,
-      user_id: props.user.id,
       restaurant_id: id,
+      name: props.user.name || props.user.userName,
     };
 
     if (editing) {
-      data.review_id = props.location.state.currentReview.user_id;
+      data.review_id = location.state.currentReview._id;
       RestaurantDataService.updateReview(data)
         .then((response) => {
           setSubmitted(true);
           console.log(response.data);
         })
         .catch((e) => {
-          console.log(e);
+          console.log("edit erroe", e);
         });
     } else {
       RestaurantDataService.createReview(data)
@@ -79,7 +67,7 @@ const AddReview = (props) => {
             <div>
               <div className="form-group">
                 <label htmlFor="description">
-                  {editing ? "Edit" : "Create"}
+                  {editing ? "Edit" : "Create"} Review
                 </label>
                 <input
                   type="text"
@@ -91,6 +79,7 @@ const AddReview = (props) => {
                   name="text"
                 />
               </div>
+              <br />
               <button onClick={saveReview} className="btn btn-success">
                 Submit
               </button>

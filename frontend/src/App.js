@@ -1,26 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route, Link } from "react-router-dom";
-
 import AddReview from "./components/add-review";
 import ListRestaurants from "./components/restaurants-list";
 import Login from "./components/login";
 import Restaurant from "./components/restaurants";
+import axios from "axios";
+import restaurantDataService from "./services/restaurantDataService";
 
 function App() {
   const [user, setUser] = React.useState(
     JSON.parse(localStorage.getItem("user"))
   );
 
+  const getUser = async () => {
+    try {
+      const url = `http://localhost:5000/api/v1/auth/login/success`;
+      const { data } = await axios.get(url, { withCredentials: true });
+      setUser(data.user);
+      console.log("User received from API:", data.user);
+    } catch (err) {
+      console.log("NO USER", err);
+    }
+  };
+
   async function login(user = null) {
     setUser(user);
+    console.log("User Data:", user);
     localStorage.setItem("user", JSON.stringify(user));
   }
 
   async function logout() {
-    setUser(null);
-    localStorage.removeItem("user");
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (confirmed) {
+      setUser(null);
+      localStorage.removeItem("user");
+      if (user.googleId) {
+        restaurantDataService.logoutGoogle();
+      }
+    }
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <div>
@@ -56,7 +79,7 @@ function App() {
                   className="btn btn-link nav-link "
                   style={{ cursor: "pointer" }}
                 >
-                  Logout {user.name}
+                  Logout {user.userName.split(" ")[0]}
                 </button>
               ) : (
                 <Link to="/login" className="nav-link ">
@@ -65,11 +88,9 @@ function App() {
               )}
             </li>
           </ul>
-        
         </div>
-        
       </nav>
-      <br/>
+      <br />
 
       <div className="container mr-3">
         <Routes>

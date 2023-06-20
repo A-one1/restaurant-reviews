@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import restaurantDataService from "../services/restaurantDataService";
+import GoogleButton from "react-google-button";
 
 const Login = (props) => {
   const [user, setUser] = useState({
-    name: "",
+    userName: "",
     id: "",
   });
   const [errors, setErrors] = useState({});
@@ -21,7 +23,7 @@ const Login = (props) => {
     let isValid = true;
     let errors = {};
 
-    if (!user.name.trim()) {
+    if (!user.userName.trim()) {
       errors.name = "Username is required";
       isValid = false;
     }
@@ -41,6 +43,11 @@ const Login = (props) => {
     }
   };
 
+  const google = () => {
+    restaurantDataService.loginGoogle().catch((error) => {
+      console.error("Error logging in with Google:", error);
+    });
+  };
 
   return (
     <div className="form-group">
@@ -69,7 +76,7 @@ const Login = (props) => {
                   placeholder="Name"
                   className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   id="loginName"
-                  name="name"
+                  name="userName"
                   value={user.name}
                   onChange={handleInputChange}
                 />
@@ -96,7 +103,7 @@ const Login = (props) => {
                 )}
               </div>
 
-              <div>
+              <center>
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -104,11 +111,17 @@ const Login = (props) => {
                 >
                   Sign in
                 </button>
-              </div>
+                <br />
+                <hr></hr>
+                
+                <GoogleButton size="small" onClick={google} />
+              </center>
+              <br />
             </form>
           </div>
         </div>
       </div>
+      <div></div>
     </div>
   );
 };

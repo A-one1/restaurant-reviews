@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RestaurantDataService from "../services/restaurantDataService";
 import { Link } from "react-router-dom";
+import GoogleMaps from "./google-maps";
 
 const ListRestaurants = (props) => {
   const [restaurants, setRestaurants] = useState([]);
@@ -9,11 +10,6 @@ const ListRestaurants = (props) => {
   const [searchZip, setSearchZip] = useState("");
   const [searchCuisine, setSearchCuisine] = useState("");
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleIframeLoad = () => {
-    setIsLoading(false);
-  };
 
   useEffect(() => {
     retrieveRestaurants();
@@ -162,29 +158,12 @@ const ListRestaurants = (props) => {
           const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
           return (
             <div className="col-lg-4 pb-1">
-              <section className="mx-auto my-3" style={{ "maxWidth": "25rem" }}>
+              <section className="mx-auto my-3" style={{ maxWidth: "25rem" }}>
                 <div className="card">
-                  <div
-                    className="bg-image hover-overlay ripple  "
-                    data-mdb-ripple-color="light"
-                  >
-                    {isLoading && (
-                      <div className="spinner-border" role="status"></div>
-                    )}
-                    <iframe
-                      title={restaurant.name}
-                      src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                        address
-                      )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                      frameBorder="0"
-                      style={{ border: 0, height: "200px", width: "100%" }}
-                      allowFullScreen
-                      onLoad={handleIframeLoad}
-                    ></iframe>
-                  </div>
+                  <GoogleMaps address={address} />
                   <div className="card-body">
                     <h5 className="card-title font-weight-bold">
-                      <a>{restaurant.name}</a>
+                      <p>{restaurant.name}</p>
                     </h5>
 
                     <p className="mb-2">
@@ -194,12 +173,7 @@ const ListRestaurants = (props) => {
                     <p className="mb-2">
                       <strong>Cuisine: </strong> {restaurant.cuisine}
                     </p>
-
-                    {/* <p class="card-text">
-                    don't need anything for now
-                    </p> */}
                     <hr className="my-4" />
-
                     <div
                       className="d-flex justify-content-center"
                       key={index}

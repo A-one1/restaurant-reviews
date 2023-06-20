@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useParams } from "react-router-dom";
 import RestaurantDataService from "../services/restaurantDataService";
+import { Modal } from "bootstrap";
 
 const Restaurant = (props) => {
   const initialRestaurantState = {
@@ -16,6 +17,11 @@ const Restaurant = (props) => {
 
   const { id } = useParams();
 
+  const [showDelete, setShowDelete] = useState(false);
+  const handleClose = () => setShowDelete(false);
+const handleShow = () => setShowDelete(true);
+
+
   const getRestaurant = (id) => {
     RestaurantDataService.get(id)
       .then((response) => {
@@ -27,10 +33,13 @@ const Restaurant = (props) => {
   };
   useEffect(() => {
     getRestaurant(id);
-  }, []);
+  }, [id]);
 
   function deleteReview(reviewId, index) {
-    RestaurantDataService.deleteReview(reviewId, props.user.id)
+    RestaurantDataService.deleteReview(
+      reviewId,
+      props.user.id || props.user.googleId
+    )
       .then((response) => {
         setRestaurant((prevState) => {
           prevState.reviews.splice(index, 1);
@@ -57,6 +66,10 @@ const Restaurant = (props) => {
     });
   };
 
+  const edit = {
+    state: "edit",
+  };
+
   return (
     <div>
       {restaurant ? (
@@ -73,12 +86,8 @@ const Restaurant = (props) => {
               <br />
             </p>
             <Link
-              to={{
-                pathname: "/restaurants/" + id + "/review",
-                state: { currentReview: "add" },
-              }}
+              to={"/restaurants/" + id + "/review"}
               className="btn btn-success btn-sm"
-
             >
               Add Review
             </Link>
@@ -97,47 +106,54 @@ const Restaurant = (props) => {
                                 width="36"
                                 height="36"
                                 fill="currentColor"
-                                class="bi bi-person-circle"
+                                className="bi bi-person-circle"
                                 viewBox="0 0 16 16"
                               >
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                 <path
-                                  fill-rule="evenodd"
+                                  fillRule="evenodd"
                                   d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
                                 />
                               </svg>
                             </div>
                             <div className="ms-lg-4">
+                              {console.log(review)}
                               <h4 className="mb-0">{review.name}</h4>
                               <p className="mb-0 fs-6">
                                 <strong>Reviewed: </strong>
                                 {formatDate(review.date)}
                               </p>
-                              <hr class="mt-2 mb-2" />
-                              <p style={{fontFamily: "cursive",fontSize:14}}>{review.text}</p>
+                              <hr className="mt-2 mb-2" />
+                              <p
+                                style={{ fontFamily: "cursive", fontSize: 14 }}
+                              >
+                                {review.text}
+                              </p>
 
-                              {props.user && props.user.id == review.user_id && (
-                                <div className="row">
-                                  <button
-                                    onClick={() =>
-                                      deleteReview(review._id, props.user.id)
-                                    }
-                                    className="btn btn-danger col-lg-3 mx-1 mb-1"
-                                  >
-                                    Delete
-                                  </button>
-                                  <Link
-                                    to={{
-                                      pathname:
-                                        "/restaurants/" + id + "/review",
-                                      state: { currentReview: review },
-                                    }}
-                                    className="btn btn-primary col-lg-3 mx-1 mb-1"
-                                  >
-                                    Edit
-                                  </Link>
-                                </div>
-                              )}
+                              {props.user &&
+                                (props.user.id || props.user.googleId) ==
+                                  review.user_id && (
+                                  <div className="row">
+                                    <button
+                                      onClick={() =>
+                                        deleteReview(
+                                          review._id,
+                                          props.user.googleId
+                                        )
+                                      }
+                                      className="btn btn-danger col-lg-3 mx-1 mb-1"
+                                    >
+                                      Delete
+                                    </button>
+                                    <Link
+                                      to={"/restaurants/" + id + "/review"}
+                                      state={{ currentReview: review }}
+                                      className="btn btn-primary col-lg-3 mx-1 mb-1"
+                                    >
+                                      Edit
+                                    </Link>
+                                  </div>
+                                )}
                             </div>
                           </div>
                         </div>
