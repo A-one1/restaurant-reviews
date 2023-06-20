@@ -54,8 +54,7 @@ const Login = (props) => {
       <div className="alert alert-success ">
         <center>
           <strong>
-            This site is in test phase. You don't need to register an account.
-            Just type in your name and an ID.
+            This site is in test phase. Use sign in with Google.
           </strong>
         </center>
       </div>

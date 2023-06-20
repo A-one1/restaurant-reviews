@@ -10,6 +10,8 @@ const ListRestaurants = (props) => {
   const [searchZip, setSearchZip] = useState("");
   const [searchCuisine, setSearchCuisine] = useState("");
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     retrieveRestaurants();
@@ -30,15 +32,20 @@ const ListRestaurants = (props) => {
     setSearchCuisine(searchCuisine);
   };
 
-  const retrieveRestaurants = () => {
-    RestaurantDataService.getAll()
+  const retrieveRestaurants = (page = currentPage) => {
+    RestaurantDataService.getAll(page)
       .then((response) => {
         console.log(response.data);
         setRestaurants(response.data.restaurants);
+        setTotalPages(response.data.totalPages);
       })
       .catch((e) => {
         console.log(e);
       });
+  };
+  const changePage = (page) => {
+    setCurrentPage(page);
+    retrieveRestaurants(page);
   };
 
   const retrieveCuisines = () => {
@@ -53,7 +60,7 @@ const ListRestaurants = (props) => {
   };
 
   const refreshList = () => {
-    retrieveRestaurants();
+    retrieveRestaurants(currentPage);
   };
 
   const find = (query, by) => {
@@ -151,97 +158,106 @@ const ListRestaurants = (props) => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        {restaurants.map((restaurant, index) => {
-          const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
-          return (
-            <div className="col-lg-4 pb-1">
-              <section className="mx-auto my-3" style={{ maxWidth: "25rem" }}>
-                <div className="card">
-                  <GoogleMaps address={address} />
-                  <div className="card-body">
-                    <h5 className="card-title font-weight-bold">
-                      <p>{restaurant.name}</p>
-                    </h5>
+        <div className="row">
+          {restaurants.map((restaurant, index) => {
+            const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
+            return (
+              <div className="col-lg-4 pb-1">
+                <section className="mx-auto my-3" style={{ maxWidth: "25rem" }}>
+                  <div className="card">
+                    <GoogleMaps address={address} />
+                    <div className="card-body">
+                      <h5 className="card-title font-weight-bold">
+                        <p>{restaurant.name}</p>
+                      </h5>
 
-                    <p className="mb-2">
-                      <strong>Address: </strong>
-                      {address}
-                    </p>
-                    <p className="mb-2">
-                      <strong>Cuisine: </strong> {restaurant.cuisine}
-                    </p>
-                    <hr className="my-4" />
-                    <div
-                      className="d-flex justify-content-center"
-                      key={index}
-                      value={restaurant}
-                    >
-                      <Link
-                        to={"/restaurants/id/" + restaurant._id}
-                        className="btn btn-primary col-lg-5 mx-1 mb-1"
+                      <p className="mb-2">
+                        <strong>Address: </strong>
+                        {address}
+                      </p>
+                      <p className="mb-2">
+                        <strong>Cuisine: </strong> {restaurant.cuisine}
+                      </p>
+                      <hr className="my-4" />
+                      <div
+                        className="d-flex justify-content-center"
+                        key={index}
+                        value={restaurant}
                       >
-                        View Reviews
-                      </Link>
-                      <a
-                        target=""
-                        href={"https://www.google.com/maps/place/" + address}
-                        className="btn btn-primary col-lg-5 mx-1 mb-1"
-                      >
-                        View Map
-                      </a>
+                        <Link
+                          to={"/restaurants/id/" + restaurant._id}
+                          className="btn btn-primary col-lg-5 mx-1 mb-1"
+                        >
+                          View Reviews
+                        </Link>
+                        <a
+                          target=""
+                          href={"https://www.google.com/maps/place/" + address}
+                          className="btn btn-primary col-lg-5 mx-1 mb-1"
+                        >
+                          View Map
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-
-            // <div className="col-lg-4 pb-1">
-            //   <div className="card">
-            //     <div className="card-body">
-            //       <div
-            //         id="map-container-google-1"
-            //         className="z-depth-1-half map-container"
-            //         style={{ height: 230}}
-            //       >
-            //         <iframe
-            //         title={restaurant.name}
-            //           src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-            //           frameBorder="0"
-            //           style={{ border: 0, height: "200px", width: "100%" }}
-            //           allowFullScreen
-            //         ></iframe>
-            //       </div>
-            //       <h5 className="card-title">{restaurant.name}</h5>
-            //       <p className="card-text">
-            //         <strong>Cuisine: </strong>
-            //         {restaurant.cuisine}
-            //         <br />
-            //         <strong>Address: </strong>
-            //         {address}
-            //       </p>
-            //       <div className="row" key={index} value={restaurant}>
-            //         <Link
-            //           to={"/restaurants/id/" + restaurant._id}
-            //           className="btn btn-primary col-lg-5 mx-1 mb-1"
-            //         >
-            //           View Reviews
-            //         </Link>
-            //         <a
-            //           target=""
-            //           href={"https://www.google.com/maps/place/" + address}
-            //           className="btn btn-primary col-lg-5 mx-1 mb-1"
-            //         >
-            //           View Map
-            //         </a>
-            //       </div>
-            //     </div>
-            //   </div>
-            // </div>
-          );
-        })}
+                </section>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="row">
+        <nav aria-label="Page navigation">
+          <ul className="pagination justify-content-end">
+            <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+              <button
+                className="page-link"
+                onClick={() => changePage(currentPage - 1)}
+              >
+                previous
+              </button>
+            </li>
+            <li>
+              <button
+                className="page-link"
+                onClick={() => changePage(currentPage - 1)}
+              >
+                {currentPage + 1}
+              </button>
+            </li>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <li
+                className={`page-item ${page === currentPage ? "active" : ""}`}
+                key={page}
+              >
+                <button className="page-link" onClick={() => changePage(page)}>
+                  {page}
+                </button>
+              </li>
+            ))}
+            <li
+              className={`page-item ${
+                currentPage === totalPages ? "disabled" : ""
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => changePage(currentPage + 1)}
+              >
+                {currentPage + 2}
+              </button>
+            </li>
+            <li>
+              <button
+                className="page-link"
+                onClick={() => changePage(currentPage + 1)}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   );
