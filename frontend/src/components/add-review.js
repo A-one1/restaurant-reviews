@@ -15,41 +15,61 @@ const AddReview = (props) => {
 
   const [review, setReview] = useState(initialReviewState);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    let isValid = true;
+    let errors = {};
+
+    if (review.length==0) {
+      errors.name = "Review cannot be empty";
+      isValid = false;
+    }
+    if(review.length > 0 && review.length < 10){
+      errors.name = "Your review is too short. Please provide more details."
+      isValid = false;
+    }
+    setErrors(errors);
+    return isValid;
+  };
+
 
   const handleInputChange = (event) => {
     setReview(event.target.value);
   };
-  
 
   const saveReview = () => {
-    var data = {
-      review_id: "",
-      user_id: props.user.id || props.user.googleId,
-      text: review,
-      restaurant_id: id,
-      name: props.user.name || props.user.userName,
-    };
+    if(validateForm()){
+      var data = {
+        review_id: "",
+        user_id: props.user.id || props.user.googleId,
+        text: review,
+        restaurant_id: id,
+        name: props.user.name || props.user.userName,
+      };
 
-    if (editing) {
-      data.review_id = location.state.currentReview._id;
-      RestaurantDataService.updateReview(data)
-        .then((response) => {
-          setSubmitted(true);
-          console.log(response.data);
-        })
-        .catch((e) => {
-          console.log("edit erroe", e);
-        });
-    } else {
-      RestaurantDataService.createReview(data)
-        .then((response) => {
-          setSubmitted(true);
-          console.log(response.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if (editing) {
+        data.review_id = location.state.currentReview._id;
+        RestaurantDataService.updateReview(data)
+          .then((response) => {
+            setSubmitted(true);
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log("edit error", e);
+          });
+      } else {
+        RestaurantDataService.createReview(data)
+          .then((response) => {
+            setSubmitted(true);
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     }
+    
   };
 
   return (
@@ -71,13 +91,16 @@ const AddReview = (props) => {
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   id="text"
                   required
                   value={review}
                   onChange={handleInputChange}
                   name="text"
                 />
+                 {errors.name && (
+                  <div className="invalid-feedback">{errors.name}</div>
+                )}
               </div>
               <br />
               <button onClick={saveReview} className="btn btn-success">

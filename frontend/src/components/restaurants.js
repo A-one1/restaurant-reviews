@@ -6,21 +6,14 @@ import RestaurantDataService from "../services/restaurantDataService";
 import { Modal } from "bootstrap";
 
 const Restaurant = (props) => {
-  const initialRestaurantState = {
+  const [restaurant, setRestaurant] = useState({
     id: null,
     name: "",
     address: {},
     cuisine: "",
     reviews: [],
-  };
-  const [restaurant, setRestaurant] = useState(initialRestaurantState);
-
+  });
   const { id } = useParams();
-
-  const [showDelete, setShowDelete] = useState(false);
-  const handleClose = () => setShowDelete(false);
-const handleShow = () => setShowDelete(true);
-
 
   const getRestaurant = (id) => {
     RestaurantDataService.get(id)
@@ -35,7 +28,9 @@ const handleShow = () => setShowDelete(true);
     getRestaurant(id);
   }, [id]);
 
-  function deleteReview(reviewId, index) {
+  function deleteReview(review, index) {
+    const reviewId = review._id;
+
     RestaurantDataService.deleteReview(
       reviewId,
       props.user.id || props.user.googleId
@@ -64,10 +59,6 @@ const handleShow = () => setShowDelete(true);
       minute: "numeric",
       second: "numeric",
     });
-  };
-
-  const edit = {
-    state: "edit",
   };
 
   return (
@@ -135,16 +126,65 @@ const handleShow = () => setShowDelete(true);
                                   review.user_id && (
                                   <div className="row">
                                     <button
-                                      onClick={() =>
-                                        deleteReview(
-                                          review._id,
-                                          props.user.googleId
-                                        )
-                                      }
+                                      type="button"
                                       className="btn btn-danger col-lg-3 mx-1 mb-1"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#Delete"
+                                      data-review-id={review._id}
+                                      data-user-id={props.user.googleId}
                                     >
                                       Delete
                                     </button>
+                                    {/* delete modal */}
+                                    <div
+                                      className="modal fade"
+                                      id="Delete"
+                                      tabIndex="-1"
+                                      aria-labelledby="DeleteLabel"
+                                      aria-hidden="true"
+                                    >
+                                      <div className="modal-dialog">
+                                        <div className="modal-content">
+                                          <div className="modal-header">
+                                            <h1
+                                              className="modal-title fs-5"
+                                              id="DeleteLabel"
+                                            >
+                                              Delete Confirmation
+                                            </h1>
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              data-bs-dismiss="modal"
+                                              aria-label="Close"
+                                            ></button>
+                                          </div>
+                                          <div className="modal-body">
+                                            Are you absolutely sure you want to
+                                            delete this review?
+                                          </div>
+                                          <div className="modal-footer">
+                                            <button
+                                              type="button"
+                                              className="btn btn-secondary"
+                                              data-bs-dismiss="modal"
+                                            >
+                                              Close
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn btn-danger"
+                                              onClick={() => {
+                                                deleteReview(review);
+                                              }}
+                                              data-bs-dismiss="modal"
+                                            >
+                                              Delete
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                     <Link
                                       to={"/restaurants/" + id + "/review"}
                                       state={{ currentReview: review }}
