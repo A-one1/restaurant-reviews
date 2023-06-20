@@ -35,7 +35,7 @@ const ListRestaurants = (props) => {
   const retrieveRestaurants = (page = currentPage) => {
     RestaurantDataService.getAll(page)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setRestaurants(response.data.restaurants);
         setTotalPages(response.data.totalPages);
       })
@@ -51,7 +51,7 @@ const ListRestaurants = (props) => {
   const retrieveCuisines = () => {
     RestaurantDataService.getCuisines()
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setCuisines(["All Cuisines"].concat(response.data));
       })
       .catch((e) => {
@@ -66,7 +66,7 @@ const ListRestaurants = (props) => {
   const find = (query, by) => {
     RestaurantDataService.find(query, by)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setRestaurants(response.data.restaurants);
       })
       .catch((e) => {

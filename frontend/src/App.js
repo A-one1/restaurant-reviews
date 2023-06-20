@@ -18,7 +18,7 @@ function App() {
       const url = `http://localhost:5000/api/v1/auth/login/success`;
       const { data } = await axios.get(url, { withCredentials: true });
       setUser(data.user);
-      console.log("User received from API:", data.user);
+      // console.log("User received from API:", data.user);
     } catch (err) {
       console.log("NO USER", err);
     }
