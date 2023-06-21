@@ -24,7 +24,7 @@ const Login = (props) => {
     let errors = {};
 
     if (!user.userName.trim()) {
-      errors.name = "Username is required";
+      errors.userName = "Username is required";
       isValid = false;
     }
 
@@ -73,14 +73,14 @@ const Login = (props) => {
                 <input
                   type="text"
                   placeholder="Name"
-                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                  id="loginName"
+                  className={`form-control ${errors.userName ? "is-invalid" : ""}`}
+                  id="userName"
                   name="userName"
-                  value={user.name}
+                  value={user.userName}
                   onChange={handleInputChange}
                 />
-                {errors.name && (
-                  <div className="invalid-feedback">{errors.name}</div>
+                {errors.userName && (
+                  <div className="invalid-feedback">{errors.userName}</div>
                 )}
               </div>
 

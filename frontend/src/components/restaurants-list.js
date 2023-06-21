@@ -218,7 +218,7 @@ const ListRestaurants = (props) => {
                 previous
               </button>
             </li>
-            <li>
+            <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
               <button
                 className="page-link"
                 onClick={() => changePage(currentPage - 1)}

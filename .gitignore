@@ -1646,3 +1646,4 @@ backend/node_modules/minimalistic-assert/index.js
 backend/node_modules/minimalistic-assert/LICENSE
 backend/node_modules/minimalistic-assert/package.json
 backend/node_modules/minimalistic-assert/readme.md
+backend/.env

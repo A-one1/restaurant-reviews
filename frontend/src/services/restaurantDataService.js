@@ -26,11 +26,13 @@ class RestaurantDataService {
   createReview(data) {
     return http.post(`/restaurants/review`, data); //node
 
-    // return http.post(`/review_new`, data); //realm
+    //  return http.post(`/review_new`, data); //realm
   }
 
   updateReview(data) {
-    return http.put(`/restaurants/review`, data);
+    return http.put(`/restaurants/review`, data);//node
+    // return http.put(`/review_edit`, data);//realm
+
   }
 
   deleteReview(id, userId) {
@@ -42,7 +44,9 @@ class RestaurantDataService {
   }
 
   getCuisines(id) {
-    return http.get(`/cuisines`);
+    return http.get(`/restaurants/cuisines`); //node
+    // return http.get(`/cuisines`); //real,
+
   }
 }
 
